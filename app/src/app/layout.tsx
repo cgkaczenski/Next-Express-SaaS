@@ -1,5 +1,6 @@
 import "./globals.css";
 import DarkModeProvider from "../components/theme-provider";
+import Sidebar from "@/components/sidebar";
 
 export const metadata = {
   title: "Create Next App",
@@ -14,7 +15,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <DarkModeProvider>{children}</DarkModeProvider>
+        <DarkModeProvider>
+          <Sidebar />
+
+          <div className="lg:pl-72 ">
+            <main>
+              <div className="w-full ">{children}</div>
+            </main>
+          </div>
+        </DarkModeProvider>
       </body>
     </html>
   );
