@@ -3,7 +3,7 @@ import { ThemeProvider } from "next-themes";
 
 const DarkModeProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
+    <ThemeProvider storageKey="theme" defaultTheme="dark" attribute="class">
       {children}
     </ThemeProvider>
   );
