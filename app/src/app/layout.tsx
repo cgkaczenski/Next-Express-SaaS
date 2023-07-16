@@ -1,4 +1,5 @@
 import "./globals.css";
+import DarkModeProvider from "../components/theme-provider";
 
 export const metadata = {
   title: "Create Next App",
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <DarkModeProvider>
+        <body>{children}</body>
+      </DarkModeProvider>
     </html>
   );
 }
