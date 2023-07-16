@@ -12,10 +12,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <DarkModeProvider>
-        <body>{children}</body>
-      </DarkModeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <DarkModeProvider>{children}</DarkModeProvider>
+      </body>
     </html>
   );
 }
