@@ -1,5 +1,6 @@
 import "./globals.css";
 import DarkModeProvider from "../components/theme-provider";
+import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 
 export const metadata = {
@@ -16,8 +17,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <DarkModeProvider>
+          <Navbar />
           <Sidebar />
-
           <div className="lg:pl-72 ">
             <main>
               <div className="w-full ">{children}</div>

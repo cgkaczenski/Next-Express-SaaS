@@ -1,11 +1,12 @@
+"use client";
+
 import {
-  CalendarIcon,
-  ChartPieIcon,
   DocumentDuplicateIcon,
-  FolderIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import DarkModeBtn from "@/components/dark-mode-button";
+import MenuLinks from "@/components/menu-links";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -17,11 +18,6 @@ const navigation = [
     current: false,
     count: "5",
   },
-];
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -36,18 +32,12 @@ export default function Sidebar() {
         <div className="flex grow flex-col gap-y-5 overflow-y-auto dark:bg-zinc-800/90 bg-zinc-200 p-6 ">
           <div className="relative flex h-16 items-center justify-between">
             <a className="text-zinc-600 dark:text-zinc-400">SVG Logo</a>
+
             <div className="-mx-6 mt-auto">
-              <a
-                href="#"
-                className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
-              >
-                <img
-                  className="h-8 w-8 rounded-full bg-gray-800"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
-                <span className="sr-only">Your profile</span>
-              </a>
+              <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white ">
+                <DarkModeBtn />
+                <MenuLinks />
+              </div>
             </div>
           </div>
           <nav className="flex flex-1 flex-col ">
