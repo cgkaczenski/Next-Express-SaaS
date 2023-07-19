@@ -1,7 +1,11 @@
 import * as express from "express";
+import { config } from "dotenv";
 
-// eslint-disable-next-line
-require("dotenv").config();
+const isProd = process.env.NODE_ENV === "production";
+if (!isProd) {
+  config();
+}
+const URL_API = isProd ? process.env.RAILWAY_STATIC_URL : process.env.URL_API;
 
 const server = express();
 
@@ -16,8 +20,8 @@ server.get("*", (_, res) => {
   res.sendStatus(403);
 });
 
-console.log(process.env.PORT_API, process.env.URL_API);
+console.log(process.env.PORT, URL_API);
 
-server.listen(process.env.PORT_API, () => {
-  console.log(`> Ready on ${process.env.URL_API}`);
+server.listen(process.env.PORT, () => {
+  console.log(`> Ready on ${URL_API}`);
 });
