@@ -1,6 +1,8 @@
 "use client";
 
 import confirm from "@/lib/confirm";
+import { toast } from "react-hot-toast";
+import NProgress from "nprogress";
 
 function testConfirm() {
   confirm({
@@ -8,6 +10,18 @@ function testConfirm() {
     message: "This is a test confirm",
     onAnswer: async (answer) => {
       console.log(answer);
+      if (!answer) {
+        return;
+      }
+      NProgress.start();
+      try {
+        toast.success("Test confirm success");
+      } catch (error) {
+        const errorStr = JSON.stringify(error);
+        toast.error(errorStr);
+      } finally {
+        NProgress.done();
+      }
     },
   });
 }

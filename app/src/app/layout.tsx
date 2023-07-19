@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { NavigationEvents } from "@/components/navigation-event";
 import { Confirmer } from "@/components/confirmer";
+import Notifier from "@/components/notifier";
 
 export const metadata = {
   title: "Create Next App",
@@ -29,6 +30,7 @@ export default function RootLayout({
             </main>
           </div>
           <Confirmer />
+          <Notifier />
         </DarkModeProvider>
       </body>
     </html>
