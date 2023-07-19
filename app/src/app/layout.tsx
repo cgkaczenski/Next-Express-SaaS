@@ -1,7 +1,10 @@
 import "./globals.css";
+import "nprogress/nprogress.css";
 import DarkModeProvider from "../components/theme-provider";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import { NavigationEvents } from "@/components/navigation-event";
+import { Confirmer } from "@/components/confirmer";
 
 export const metadata = {
   title: "Create Next App",
@@ -16,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        <NavigationEvents />
         <DarkModeProvider>
           <Navbar />
           <Sidebar />
@@ -24,6 +28,7 @@ export default function RootLayout({
               <div className="w-full ">{children}</div>
             </main>
           </div>
+          <Confirmer />
         </DarkModeProvider>
       </body>
     </html>

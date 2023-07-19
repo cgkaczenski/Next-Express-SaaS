@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DarkModeBtn from "@/components/dark-mode-button";
 import MenuLinks from "@/components/menu-links";
+import Link from "next/link";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -31,7 +32,9 @@ export default function Sidebar() {
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto dark:bg-zinc-800/90 bg-zinc-200 p-6 ">
           <div className="relative flex h-16 items-center justify-between">
-            <a className="text-zinc-600 dark:text-zinc-400">SVG Logo</a>
+            <Link href="/" className="text-zinc-600 dark:text-zinc-400">
+              SVG Logo
+            </Link>
 
             <div className="-mx-6 mt-auto">
               <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white ">

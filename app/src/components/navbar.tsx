@@ -4,6 +4,7 @@ import { Disclosure } from "@headlessui/react";
 import DarkModeBtn from "@/components/dark-mode-button";
 import MenuLinks from "@/components/menu-links";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -39,7 +40,9 @@ export default function Navbar() {
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <a className="text-zinc-600 dark:text-zinc-400">SVG Logo</a>
+                    <Link href="/" className="text-zinc-600 dark:text-zinc-400">
+                      SVG Logo
+                    </Link>
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
