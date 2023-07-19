@@ -13,14 +13,14 @@ server.use(express.json());
 
 server.get("/api/v1/public/get-user", (_, res) => {
   console.log("API server got request from APP server or browser");
-  res.json({ user: { email: "team@builderbook.org" } });
+  res.json({ user: { email: "me@chriskaczenski.com" } });
 });
 
 server.get("*", (_, res) => {
   res.sendStatus(403);
 });
 
-console.log(process.env.PORT, URL_API);
+console.log(process.env.PORT, process.env.NODE_ENV);
 
 server.listen(process.env.PORT, () => {
   console.log(`> Ready on ${URL_API}`);
