@@ -21,7 +21,7 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   return (
-    <div className="block sm:hidden">
+    <div className="block lg:hidden">
       <Disclosure as="nav" className="bg-zinc-200 dark:bg-zinc-800/90">
         {({ open }) => (
           <>
