@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import getUserApiMethod from "@/lib/api/public";
 
-type user = { user: { email: string } };
+type user = { user: { email: string; displayName: string } };
 
 async function getUser() {
   const cookieStore = cookies();
@@ -19,7 +19,10 @@ export default async function Home() {
         <h1>Home Page</h1>
         <Link href="/test-page">Go to test page</Link>
       </div>
-      <p>Email: {user.email}</p>
+      <div>
+        <p>Email: {user.email}</p>
+        <p>Name: {user.displayName}</p>
+      </div>
     </div>
   );
 }
