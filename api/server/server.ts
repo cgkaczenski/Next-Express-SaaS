@@ -1,5 +1,6 @@
 import * as express from "express";
 import { config } from "dotenv";
+import UserService from "./services/User";
 
 const isProd = process.env.NODE_ENV === "production";
 if (!isProd) {
@@ -11,9 +12,10 @@ const server = express();
 
 server.use(express.json());
 
-server.get("/api/v1/public/get-user", (_, res) => {
+server.get("/api/v1/public/get-user", async (_, res) => {
   console.log("API server got request from APP server or browser");
-  res.json({ user: { email: "me@chriskaczenski.com" } });
+  const user = await UserService.getUserBySlug({ slug: "me" });
+  res.json({ user: user });
 });
 
 server.get("*", (_, res) => {
