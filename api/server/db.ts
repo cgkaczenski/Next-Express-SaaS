@@ -36,7 +36,7 @@ class postgresDatabase implements UserRepository {
     avatarUrl: string;
   }): Promise<User[]> {
     const users = await this.sql<User[]>`
-      UPDATE users SET name = ${name}, avatar_url = ${avatarUrl} WHERE id = ${userId}
+      UPDATE users SET display_name = ${name}, avatar_url = ${avatarUrl} WHERE id = ${userId}
     `;
     return users;
   }

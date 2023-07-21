@@ -5,15 +5,13 @@ import React, { useState } from "react";
 import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
 import NProgress from "nprogress";
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { updateProfileApiMethod } from "@/lib/api/public";
 
 export default function YourSettingsPage(props: {
   user: { email: string; displayName: string; avatarUrl: string };
+  cookie: any;
 }) {
-  const { user } = props;
+  const { user, cookie } = props;
   const [originalName, setOriginalName] = useState(user.displayName);
   const [name, setName] = useState(user.displayName);
   const [originalAvatarUrl, setOriginalAvatarUrl] = useState(user.avatarUrl);
@@ -40,17 +38,19 @@ export default function YourSettingsPage(props: {
           NProgress.start();
           setDisabled(true);
           try {
-            await sleep(2000);
-            console.log(name);
+            await updateProfileApiMethod(
+              { name: name, avatarUrl: avatarUrl },
+              cookie
+            );
+            toast.success("You updated your profile");
+            setOriginalName(name);
+            setOriginalAvatarUrl(avatarUrl);
           } catch (error) {
             const errorStr = JSON.stringify(error);
             toast.error(errorStr);
           } finally {
-            toast.success("You updated your profile");
             NProgress.done();
             setDisabled(false);
-            setOriginalName(name);
-            setOriginalAvatarUrl(avatarUrl);
           }
         }
       },

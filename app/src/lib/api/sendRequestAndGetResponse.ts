@@ -6,7 +6,7 @@ export default async function sendRequestAndGetResponse(
     "Content-type": "application/json; charset=UTF-8",
   });
 
-  const { cookie } = opts;
+  const { cookie, method } = opts;
   if (cookie) {
     headers.cookie = cookie;
   }
@@ -15,7 +15,7 @@ export default async function sendRequestAndGetResponse(
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}${path}${qs}`,
-    Object.assign({ method: "POST", credentials: "include" }, opts, { headers })
+    Object.assign({ method: method, credentials: "include" }, opts, { headers })
   );
 
   if (!response.ok) {

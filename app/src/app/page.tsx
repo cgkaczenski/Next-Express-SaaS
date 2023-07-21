@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import getUserApiMethod from "@/lib/api/public";
+import { getUserApiMethod } from "@/lib/api/public";
 
 type user = { user: { email: string; displayName: string } };
 
+const slug = "me";
+
 async function getUser() {
   const cookieStore = cookies();
-  const user = (await getUserApiMethod(cookieStore)) as user;
+  const user = (await getUserApiMethod(slug, cookieStore)) as user;
   return user.user;
 }
 
