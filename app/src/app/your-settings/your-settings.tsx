@@ -68,6 +68,35 @@ export default function YourSettingsPage(props: {
     confirmSubmit();
   }
 
+  async function uploadFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const fileElement = document.getElementById(
+      "upload-file-user-avatar"
+    ) as HTMLFormElement;
+    const file = fileElement.files[0];
+
+    if (file == null) {
+      return;
+    }
+    const fileName = file.name;
+    const fileType = file.type;
+
+    NProgress.start();
+    setDisabled(true);
+    try {
+      // call getSignedRequestForUploadApiMethod
+      // call uploadFileUsingSignedPutRequestApiMethod
+      toast.success(
+        "You uploaded your avatar! Please save to update your profile"
+      );
+    } catch (error) {
+      const errorStr = JSON.stringify(error);
+      toast.error(errorStr);
+    } finally {
+      NProgress.done();
+      setDisabled(false);
+    }
+  }
+
   return (
     <div className="p-3 dark:bg-zinc-700 min-h-screen flex justify-center">
       <form
@@ -89,7 +118,7 @@ export default function YourSettingsPage(props: {
                 >
                   Username
                 </label>
-                <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <div className="mt-2 sm:col-span-2 sm:mt-0 w-1/2">
                   <div className="flex rounded-md bg-white/5 ring-1 ring-inset ring-white/10 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 sm:max-w-md">
                     <input
                       type="text"
@@ -136,13 +165,30 @@ export default function YourSettingsPage(props: {
                         aria-hidden="true"
                       />
                     )}
-                    <button
-                      type="button"
-                      className="rounded-md bg-white/10 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm hover:bg-white/20 dark:ring-0 ring-1 ring-inset ring-gray-300"
-                      disabled={disabled}
-                    >
-                      Change
-                    </button>
+                    <label htmlFor="upload-file-user-avatar">
+                      <button
+                        type="button"
+                        className="rounded-md bg-white/10 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm hover:bg-white/20 dark:ring-0 ring-1 ring-inset ring-gray-300"
+                        disabled={disabled}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          const fileElement = document.getElementById(
+                            "upload-file-user-avatar"
+                          ) as HTMLFormElement;
+                          fileElement.click();
+                        }}
+                      >
+                        Change
+                      </button>
+                    </label>
+                    <input
+                      accept="image/*"
+                      name="upload-file-user-avatar"
+                      id="upload-file-user-avatar"
+                      type="file"
+                      className="hidden"
+                      onChange={uploadFile}
+                    />
                   </div>
                 </div>
               </div>
