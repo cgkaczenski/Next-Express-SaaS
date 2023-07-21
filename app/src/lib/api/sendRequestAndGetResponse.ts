@@ -15,7 +15,7 @@ export default async function sendRequestAndGetResponse(
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}${path}${qs}`,
-    Object.assign({ method: method, credentials: "include" }, opts, { headers })
+    Object.assign({ method: "POST", credentials: "include" }, opts, { headers })
   );
 
   if (!response.ok) {

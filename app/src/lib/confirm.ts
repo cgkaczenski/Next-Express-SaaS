@@ -9,6 +9,5 @@ export default function confirm({
   message: string;
   onAnswer: (answer: boolean) => void;
 }) {
-  console.log(typeof openConfirmDialogExternal);
   openConfirmDialogExternal({ title, message, onAnswer });
 }
