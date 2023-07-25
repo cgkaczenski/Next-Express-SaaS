@@ -2,11 +2,17 @@ export default async function sendRequestAndGetResponse(
   path: string,
   opts: any = {}
 ) {
-  const headers = Object.assign({}, opts.headers || {}, {
-    "Content-type": "application/json; charset=UTF-8",
-  });
+  const headers = Object.assign(
+    {},
+    opts.headers || {},
+    opts.externalServer
+      ? {}
+      : {
+          "Content-type": "application/json; charset=UTF-8",
+        }
+  );
 
-  const { cookie, method } = opts;
+  const { cookie } = opts;
   if (cookie) {
     headers.cookie = cookie;
   }
@@ -14,8 +20,14 @@ export default async function sendRequestAndGetResponse(
   const qs = opts.qs || "";
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}${path}${qs}`,
-    Object.assign({ method: "POST", credentials: "include" }, opts, { headers })
+    opts.externalServer
+      ? `${path}${qs}`
+      : `${process.env.NEXT_PUBLIC_URL_API}${path}${qs}`,
+    opts.externalServer
+      ? Object.assign({ method: "POST" }, opts, { headers })
+      : Object.assign({ method: "POST", credentials: "include" }, opts, {
+          headers,
+        })
   );
 
   if (!response.ok) {

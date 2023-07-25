@@ -6,6 +6,10 @@ import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
 import NProgress from "nprogress";
 import { updateProfileApiMethod } from "@/lib/api/public";
+import {
+  getSignedRequestForUploadApiMethod,
+  uploadFileUsingSignedPutRequestApiMethod,
+} from "@/lib/api/team-member";
 
 export default function YourSettingsPage(props: {
   user: { email: string; displayName: string; avatarUrl: string };
@@ -78,13 +82,24 @@ export default function YourSettingsPage(props: {
       return;
     }
     const fileName = file.name;
-    const fileType = file.type;
+    const slug = "me";
+    const bucket = "avatars";
 
     NProgress.start();
     setDisabled(true);
     try {
-      // call getSignedRequestForUploadApiMethod
-      // call uploadFileUsingSignedPutRequestApiMethod
+      const response = await getSignedRequestForUploadApiMethod({
+        bucket,
+        slug,
+        fileName,
+      });
+
+      await uploadFileUsingSignedPutRequestApiMethod(file, response.signedUrl, {
+        "Cache-Control": "max-age=2592000",
+      });
+
+      setAvatarUrl(response.url);
+
       toast.success(
         "You uploaded your avatar! Please save to update your profile"
       );
