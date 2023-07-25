@@ -10,6 +10,7 @@ import {
   getSignedRequestForUploadApiMethod,
   uploadFileUsingSignedPutRequestApiMethod,
 } from "@/lib/api/team-member";
+import { resizeImage } from "@/lib/resizeImage";
 
 export default function YourSettingsPage(props: {
   user: { email: string; displayName: string; avatarUrl: string };
@@ -94,9 +95,15 @@ export default function YourSettingsPage(props: {
         fileName,
       });
 
-      await uploadFileUsingSignedPutRequestApiMethod(file, response.signedUrl, {
-        "Cache-Control": "max-age=2592000",
-      });
+      const resizedFile = await resizeImage(file, 128, 128);
+
+      await uploadFileUsingSignedPutRequestApiMethod(
+        resizedFile,
+        response.signedUrl,
+        {
+          "Cache-Control": "max-age=2592000",
+        }
+      );
 
       setAvatarUrl(response.url);
 

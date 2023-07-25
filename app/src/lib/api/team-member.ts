@@ -20,7 +20,7 @@ export async function getSignedRequestForUploadApiMethod({
 }
 
 export const uploadFileUsingSignedPutRequestApiMethod = (
-  file: File,
+  file: File | Blob,
   signedRequest: string,
   headers = {}
 ) =>
