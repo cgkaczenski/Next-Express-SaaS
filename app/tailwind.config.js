@@ -6,5 +6,13 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-poppins)"],
+        mono: ["var(--font-roboto)"],
+      },
+    },
+  },
   plugins: [],
 };

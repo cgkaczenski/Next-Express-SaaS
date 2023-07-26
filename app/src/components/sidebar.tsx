@@ -32,8 +32,13 @@ export default function Sidebar() {
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto dark:bg-zinc-800/90 bg-zinc-200 p-6 ">
           <div className="relative flex h-16 items-center justify-between">
-            <Link href="/" className="text-zinc-600 dark:text-zinc-400">
-              SVG Logo
+            <Link
+              href="/teams/your-settings"
+              className="text-zinc-600 dark:text-zinc-400"
+            >
+              <h2 className="font-semibold text-xl">
+                Go<span className="font-extralight">Berserk</span>
+              </h2>
             </Link>
 
             <div className="-mx-6 mt-auto">
