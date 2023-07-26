@@ -1,8 +1,6 @@
 import "./globals.css";
 import "nprogress/nprogress.css";
 import DarkModeProvider from "../components/theme-provider";
-import Navbar from "@/components/navbar";
-import Sidebar from "@/components/sidebar";
 import { NavigationEvents } from "@/components/navigation-event";
 import { Confirmer } from "@/components/confirmer";
 import Notifier from "@/components/notifier";
@@ -22,13 +20,9 @@ export default function RootLayout({
       <body>
         <NavigationEvents />
         <DarkModeProvider>
-          <Navbar />
-          <Sidebar />
-          <div className="lg:pl-72 ">
-            <main>
-              <div className="w-full ">{children}</div>
-            </main>
-          </div>
+          <main>
+            <div>{children}</div>
+          </main>
           <Confirmer />
           <Notifier />
         </DarkModeProvider>

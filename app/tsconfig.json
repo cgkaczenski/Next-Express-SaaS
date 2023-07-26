@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/your-settings"
+    "src/app/teams/your-settings"
   ],
   "exclude": ["node_modules"]
 }

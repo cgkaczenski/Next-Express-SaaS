@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
 import NProgress from "nprogress";
@@ -37,6 +38,11 @@ export default function TestPage() {
         >
           Some button
         </button>
+      </div>
+      <div className="py-4 px-16 text-lg">
+        <Link href="/" className="-m-1.5 p-1.5">
+          Home Page
+        </Link>
       </div>
     </div>
   );
