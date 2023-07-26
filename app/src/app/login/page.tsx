@@ -35,7 +35,11 @@ export default function LoginPage() {
               <div className="mt-6 mx-auto gap-4 pb-12 flex justify-center">
                 <button
                   disabled={signInClicked}
-                  className="flex items-center justify-center gap-3 rounded-md py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F] border border-gray-200 bg-white text-black hover:bg-gray-50 w-40 flex-shrink-0"
+                  className={`${
+                    signInClicked
+                      ? "cursor-not-allowed border-gray-200 bg-gray-100"
+                      : "border border-gray-200 bg-white text-black hover:bg-gray-50"
+                  } flex items-center justify-center gap-3 rounded-md py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]  w-40 flex-shrink-0`}
                   onClick={handleClick}
                 >
                   {signInClicked ? (
