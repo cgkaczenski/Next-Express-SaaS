@@ -29,7 +29,6 @@ export default function Sidebar() {
   return (
     <div>
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col ">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto dark:bg-zinc-800/90 bg-zinc-200 p-6 ">
           <div className="relative flex h-16 items-center justify-between">
             <Link

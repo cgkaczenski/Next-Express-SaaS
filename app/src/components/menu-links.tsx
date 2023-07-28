@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { Menu, Transition } from "@headlessui/react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 
@@ -8,6 +9,10 @@ function classNames(...classes: string[]) {
 }
 
 export default function MenuLinks() {
+  async function handleSignOut() {
+    await signOut({ callbackUrl: "/" });
+  }
+
   return (
     <Menu as="div" className="relative ml-3">
       <div>
@@ -46,11 +51,11 @@ export default function MenuLinks() {
           <Menu.Item>
             {({ active }) => (
               <a
-                href="#"
                 className={classNames(
                   active ? "bg-gray-100" : "",
                   "block px-4 py-2 text-sm text-gray-700"
                 )}
+                onClick={handleSignOut}
               >
                 Sign out
               </a>
