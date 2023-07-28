@@ -44,7 +44,7 @@ export default function YourSettingsPage(props: {
           setDisabled(true);
           try {
             await updateProfileApiMethod(
-              { name: name, avatarUrl: avatarUrl },
+              { email: user.email, name: name, avatarUrl: avatarUrl },
               cookie
             );
             toast.success("You updated your profile");
@@ -83,7 +83,7 @@ export default function YourSettingsPage(props: {
       return;
     }
     const fileName = file.name;
-    const slug = "me";
+    const slug = user.email;
     const bucket = "avatars";
 
     NProgress.start();
