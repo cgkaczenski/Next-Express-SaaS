@@ -1,5 +1,8 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 import { getUserApiMethod } from "@/lib/api/public";
 import YourSettingsPage from "./your-settings";
 
@@ -12,7 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function YourSettings() {
-  const cookieStore = cookies();
-  const user = (await getUserApiMethod(slug, cookieStore)) as user;
-  return <YourSettingsPage user={user.user} cookie={cookieStore} />;
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+  const email = session?.user?.email;
+  console.log(session?.user?.email);
+  const cookie = cookies().get("next-auth.session-token")?.value;
+  const user = (await getUserApiMethod(slug, cookie)) as user;
+  return <YourSettingsPage user={user.user} cookie={cookie} />;
 }
