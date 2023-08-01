@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { SupabaseAdapter } from "@next-auth/supabase-adapter";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,6 +14,14 @@ export const authOptions: NextAuthOptions = {
     url: process.env.NEXT_PUBLIC_SUPABASE_URL as string,
     secret: process.env.SUPABASE_SERVICE_ROLE_KEY as string,
   }),
+  events: {
+    signIn: async (message) => {
+      if (message.isNewUser) {
+        const user = message.user;
+        sendWelcomeEmail(user.name as string, user.email as string);
+      }
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
