@@ -4,7 +4,7 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
-import NProgress from "nprogress";
+import NProgress, { set } from "nprogress";
 import { updateProfileApiMethod } from "@/lib/api/public";
 import {
   getSignedRequestForUploadApiMethod,
@@ -29,6 +29,7 @@ export default function YourSettingsPage(props: {
 
   function handleCancel() {
     setName(originalName);
+    setAvatarUrl(originalAvatarUrl);
   }
 
   async function confirmSubmit() {
@@ -83,7 +84,7 @@ export default function YourSettingsPage(props: {
       return;
     }
     const fileName = file.name;
-    const slug = "me";
+    const slug = user.email;
     const bucket = "avatars";
 
     NProgress.start();

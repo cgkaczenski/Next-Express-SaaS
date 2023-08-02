@@ -1,7 +1,7 @@
 import db from "../db";
 
 export interface User {
-  slug: string;
+  id: string;
   createdAt: Date;
   email: string;
   displayName: string;
@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface UserRepository {
-  getUserBySlug({ slug }: { slug: string }): Promise<User>;
+  getUserByEmail({ email }: { email: string }): Promise<User>;
 
   updateProfile({
     userId,
@@ -29,8 +29,8 @@ class UserService {
     this.database = database;
   }
 
-  public async getUserBySlug({ slug }: { slug: string }): Promise<User> {
-    return this.database.getUserBySlug({ slug });
+  public async getUserByEmail({ email }: { email: string }): Promise<User> {
+    return this.database.getUserByEmail({ email });
   }
 
   public async updateProfile({
