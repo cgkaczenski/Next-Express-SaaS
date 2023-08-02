@@ -4,7 +4,7 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
-import NProgress, { set } from "nprogress";
+import NProgress from "nprogress";
 import { updateProfileApiMethod } from "@/lib/api/public";
 import {
   getSignedRequestForUploadApiMethod,
@@ -45,7 +45,7 @@ export default function YourSettingsPage(props: {
           setDisabled(true);
           try {
             await updateProfileApiMethod(
-              { name: name, avatarUrl: avatarUrl },
+              { email: user.email, name: name, avatarUrl: avatarUrl },
               cookie
             );
             toast.success("You updated your profile");
