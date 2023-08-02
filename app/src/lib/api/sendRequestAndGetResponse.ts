@@ -1,20 +1,27 @@
 export default async function sendRequestAndGetResponse(
   path: string,
-  opts: any = {}
+  opts: any = {},
+  token?: string
 ) {
   const headers = Object.assign(
     {},
     opts.headers || {},
     opts.externalServer
       ? {}
+      : token
+      ? {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        }
       : {
           "Content-type": "application/json; charset=UTF-8",
         }
   );
 
-  const { cookie } = opts;
-  if (cookie) {
-    headers.cookie = cookie;
+  const { request } = opts;
+
+  if (request && request.headers && request.headers.cookie) {
+    headers.cookie = request.headers.cookie;
   }
 
   const qs = opts.qs || "";
