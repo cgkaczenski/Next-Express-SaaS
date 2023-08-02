@@ -20,7 +20,14 @@ export default async function YourSettings() {
     redirect("/login");
   }
   const email = session?.user?.email as string;
-  const cookie = cookies().get("next-auth.session-token")?.value;
-  const user = (await getUserApiMethod(email, cookie)) as user;
-  return <YourSettingsPage user={user.user} cookie={cookie} />;
+  let accessToken;
+  cookies()
+    .getAll()
+    .forEach((cookie) => {
+      if (cookie.name.includes("next-auth.session-token")) {
+        accessToken = cookie.value;
+      }
+    });
+  const user = (await getUserApiMethod(email, accessToken)) as user;
+  return <YourSettingsPage user={user.user} cookie={accessToken} />;
 }
