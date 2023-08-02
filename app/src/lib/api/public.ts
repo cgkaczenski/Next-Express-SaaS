@@ -2,10 +2,10 @@ import sendRequestAndGetResponse from "./sendRequestAndGetResponse";
 
 const BASE_PATH = "/api/v1/public";
 
-export async function getUserApiMethod(email: string, cookie: any) {
-  return sendRequestAndGetResponse(`${BASE_PATH}/get-user-by-email`, {
+export async function getUserApiMethod(slug: string, cookie: any) {
+  return sendRequestAndGetResponse(`${BASE_PATH}/get-user-by-slug`, {
     cookie,
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ slug }),
   });
 }
 

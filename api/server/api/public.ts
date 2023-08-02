@@ -4,13 +4,13 @@ import UserService from "../services/User";
 
 const router = express.Router();
 
-router.post("/get-user-by-email", async (req, res, next) => {
-  console.log("Express route: /get-user-by-email");
+router.post("/get-user-by-slug", async (req, res, next) => {
+  console.log("Express route: /get-user-by-slug");
 
   try {
-    const { email } = req.body;
+    const { slug } = req.body;
 
-    const user = await UserService.getUserByEmail({ email });
+    const user = await UserService.getUserBySlug({ slug });
     res.json({ user });
   } catch (err) {
     next(err);
@@ -21,10 +21,9 @@ router.post("/user/update-profile", async (req: any, res, next) => {
   console.log("Express route: /user/update-profile");
 
   try {
-    const { email, name, avatarUrl } = req.body;
+    const { name, avatarUrl } = req.body;
 
-    const user = await UserService.getUserByEmail({ email });
-    const userId = user.id;
+    const userId = "123";
 
     const updatedUser = await UserService.updateProfile({
       userId: userId,

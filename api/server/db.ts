@@ -19,9 +19,9 @@ class postgresDatabase implements UserRepository {
     this.transformer = new DataTransformer();
   }
 
-  public async getUserByEmail({ email }: { email: string }): Promise<User> {
+  public async getUserBySlug({ slug }: { slug: string }): Promise<User> {
     const users = await this.sql<User[]>`
-      SELECT id, email, name as display_name, image as avatar_url FROM next_auth.users WHERE email = ${email}
+      SELECT email, display_name, avatar_url FROM users WHERE slug = ${slug}
     `;
     return this.transformer.convertRowToUser(users[0]);
   }
@@ -36,7 +36,7 @@ class postgresDatabase implements UserRepository {
     avatarUrl: string;
   }): Promise<User[]> {
     const users = await this.sql<User[]>`
-      UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId}
+      UPDATE users SET display_name = ${name}, avatar_url = ${avatarUrl} WHERE id = ${userId}
     `;
     return users;
   }
@@ -45,7 +45,7 @@ class postgresDatabase implements UserRepository {
 class DataTransformer {
   convertRowToUser(row: postgres.Row): User {
     return {
-      id: row.id,
+      slug: row.slug,
       createdAt: row.created_at,
       displayName: row.display_name,
       email: row.email,
