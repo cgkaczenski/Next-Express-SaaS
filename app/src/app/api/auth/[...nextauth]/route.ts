@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import Email from "next-auth/providers/email";
 import { SupabaseAdapter } from "@next-auth/supabase-adapter";
 import { sendWelcomeEmail } from "@/lib/email";
+import { importContact } from "@/lib/contactImporter";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -31,6 +32,7 @@ export const authOptions: NextAuthOptions = {
       if (message.isNewUser) {
         const user = message.user;
         sendWelcomeEmail(user.name as string, user.email as string);
+        importContact(user.email as string);
       }
     },
   },

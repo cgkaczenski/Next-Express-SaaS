@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@next-auth/supabase-adapter": "^0.2.1",
+    "@sendgrid/client": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
     "@supabase/supabase-js": "^2.31.0",
     "@types/node": "20.3.1",
