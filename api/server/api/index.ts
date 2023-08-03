@@ -1,4 +1,5 @@
 import * as express from "express";
+import SessionService from "../services/Session";
 import publicExpressRoutes from "./public";
 import teamMemberExpressRoutes from "./team-member";
 
@@ -13,11 +14,20 @@ async function checkSession(req, res, next) {
   if (req && req.headers) {
     authHeader = req.headers["authorization"];
   }
-
-  if (!authHeader) {
-    return res.status(401).json({ error: "No authorization header" });
-  } else {
+  try {
+    if (!authHeader) {
+      return res.status(401).json({ error: "No authorization header" });
+    }
+    const sessionToken = authHeader.split(" ")[1] as string;
+    const session = await SessionService.getSession({
+      sessionToken,
+    });
+    if (!session || session.expires < new Date()) {
+      return res.status(401).json({ error: "Invalid session token" });
+    }
     next();
+  } catch (err) {
+    next(err);
   }
 }
 

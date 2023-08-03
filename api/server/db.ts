@@ -1,5 +1,6 @@
 import * as postgres from "postgres";
 import { User, UserRepository } from "./services/User";
+import { Session, SessionRepository } from "./services/Session";
 import { config } from "dotenv";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -7,7 +8,7 @@ if (!isProd) {
   config();
 }
 
-class postgresDatabase implements UserRepository {
+class postgresDatabase implements UserRepository, SessionRepository {
   sql: postgres.Sql;
   transformer: DataTransformer;
 
@@ -39,6 +40,17 @@ class postgresDatabase implements UserRepository {
     UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId}
     `;
     return users;
+  }
+
+  public async getSession({
+    sessionToken,
+  }: {
+    sessionToken: string;
+  }): Promise<Session> {
+    const sessions = await this.sql<Session[]>`
+    SELECT "userId", expires, "sessionToken" FROM next_auth.sessions WHERE "sessionToken" = ${sessionToken}
+    `;
+    return sessions[0];
   }
 }
 
