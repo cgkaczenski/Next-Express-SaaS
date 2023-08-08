@@ -8,6 +8,8 @@ import {
 import DarkModeBtn from "@/components/dark-mode-button";
 import MenuLinks from "@/components/menu-links";
 import Link from "next/link";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/components/store-provider";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -25,7 +27,8 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Sidebar() {
+const Sidebar = observer(() => {
+  const store = useStore();
   return (
     <div>
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col ">
@@ -43,7 +46,7 @@ export default function Sidebar() {
             <div className="-mx-6 mt-auto">
               <div className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white ">
                 <DarkModeBtn />
-                <MenuLinks />
+                <MenuLinks avatarUrl={store.avatarUrl} />
               </div>
             </div>
           </div>
@@ -86,4 +89,6 @@ export default function Sidebar() {
       </div>
     </div>
   );
-}
+});
+
+export default Sidebar;

@@ -8,7 +8,9 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function MenuLinks() {
+export default function MenuLinks(props: { avatarUrl?: string }) {
+  const { avatarUrl } = props;
+
   async function handleSignOut() {
     await signOut({ callbackUrl: "/" });
   }
@@ -18,10 +20,18 @@ export default function MenuLinks() {
       <div>
         <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <UserCircleIcon
-            className="h-12 w-12 text-gray-300"
-            aria-hidden="true"
-          />
+          {avatarUrl ? (
+            <img
+              className="h-8 w-8 rounded-full"
+              src={avatarUrl}
+              alt="user avatar"
+            />
+          ) : (
+            <UserCircleIcon
+              className="h-8 w-8 text-gray-300"
+              aria-hidden="true"
+            />
+          )}
         </Menu.Button>
       </div>
       <Transition

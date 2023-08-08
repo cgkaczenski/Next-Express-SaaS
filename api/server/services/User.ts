@@ -2,7 +2,6 @@ import db from "../db";
 
 export interface User {
   id: string;
-  createdAt: Date;
   email: string;
   displayName: string;
   avatarUrl: string;
@@ -19,7 +18,7 @@ export interface UserRepository {
     userId: string;
     name: string;
     avatarUrl: string;
-  }): Promise<User[]>;
+  }): Promise<User>;
 }
 
 class UserService {
@@ -41,7 +40,7 @@ class UserService {
     userId: string;
     name: string;
     avatarUrl: string;
-  }): Promise<User[]> {
+  }): Promise<User> {
     return this.database.updateProfile({ userId, name, avatarUrl });
   }
 }

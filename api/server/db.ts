@@ -35,11 +35,11 @@ class postgresDatabase implements UserRepository, SessionRepository {
     userId: string;
     name: string;
     avatarUrl: string;
-  }): Promise<User[]> {
+  }): Promise<User> {
     const users = await this.sql<User[]>`
-    UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId}
+    UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId} RETURNING id, email, name as display_name, image as avatar_url;
     `;
-    return users;
+    return this.transformer.convertRowToUser(users[0]);
   }
 
   public async getSession({
@@ -58,7 +58,6 @@ class DataTransformer {
   convertRowToUser(row: postgres.Row): User {
     return {
       id: row.id,
-      createdAt: row.created_at,
       displayName: row.display_name,
       email: row.email,
       avatarUrl: row.avatar_url,

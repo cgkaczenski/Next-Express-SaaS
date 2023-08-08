@@ -5,22 +5,21 @@ import React, { useState } from "react";
 import confirm from "@/lib/confirm";
 import { toast } from "react-hot-toast";
 import NProgress from "nprogress";
-import { updateProfileApiMethod } from "@/lib/api/public";
 import {
   getSignedRequestForUploadApiMethod,
   uploadFileUsingSignedPutRequestApiMethod,
 } from "@/lib/api/team-member";
 import { resizeImage } from "@/lib/resizeImage";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/components/store-provider";
 
-export default function YourSettingsPage(props: {
-  user: { email: string; displayName: string; avatarUrl: string };
-  cookie: any;
-}) {
-  const { user, cookie } = props;
-  const [originalName, setOriginalName] = useState(user.displayName);
-  const [name, setName] = useState(user.displayName);
-  const [originalAvatarUrl, setOriginalAvatarUrl] = useState(user.avatarUrl);
-  const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
+const YourSettingsPage = observer((props: { cookie: any }) => {
+  const store = useStore() as any;
+  const { cookie } = props;
+  const [originalName, setOriginalName] = useState(store.displayName);
+  const [name, setName] = useState(store.displayName);
+  const [originalAvatarUrl, setOriginalAvatarUrl] = useState(store.avatarUrl);
+  const [avatarUrl, setAvatarUrl] = useState(store.avatarUrl);
   const [disabled, setDisabled] = useState(false);
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -44,13 +43,10 @@ export default function YourSettingsPage(props: {
           NProgress.start();
           setDisabled(true);
           try {
-            await updateProfileApiMethod(
-              { email: user.email, name: name, avatarUrl: avatarUrl },
-              cookie
-            );
+            store.updateProfile({ name, avatarUrl, cookie });
             toast.success("You updated your profile");
-            setOriginalName(name);
-            setOriginalAvatarUrl(avatarUrl);
+            setOriginalName(store.name);
+            setOriginalAvatarUrl(store.avatarUrl);
           } catch (error) {
             const errorStr = JSON.stringify(error);
             toast.error(errorStr);
@@ -84,17 +80,20 @@ export default function YourSettingsPage(props: {
       return;
     }
     const fileName = file.name;
-    const slug = user.email;
+    const slug = store.email;
     const bucket = "avatars";
 
     NProgress.start();
     setDisabled(true);
     try {
-      const response = await getSignedRequestForUploadApiMethod({
-        bucket,
-        slug,
-        fileName,
-      });
+      const response = await getSignedRequestForUploadApiMethod(
+        {
+          bucket,
+          slug,
+          fileName,
+        },
+        cookie
+      );
 
       const resizedFile = await resizeImage(file, 128, 128);
 
@@ -105,7 +104,7 @@ export default function YourSettingsPage(props: {
           "Cache-Control": "max-age=2592000",
         }
       );
-
+      console.log("response.url", response.url);
       setAvatarUrl(response.url);
 
       toast.success(
@@ -163,7 +162,7 @@ export default function YourSettingsPage(props: {
                   Email
                 </label>
                 <div className="mt-2 sm:col-span-2 sm:mt-0">
-                  <p className=" dark:text-white"> {user.email}</p>
+                  <p className=" dark:text-white"> {store.email}</p>
                 </div>
               </div>
 
@@ -239,4 +238,6 @@ export default function YourSettingsPage(props: {
       </form>
     </div>
   );
-}
+});
+
+export default YourSettingsPage;

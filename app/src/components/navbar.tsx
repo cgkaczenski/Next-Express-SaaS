@@ -5,6 +5,8 @@ import DarkModeBtn from "@/components/dark-mode-button";
 import MenuLinks from "@/components/menu-links";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/components/store-provider";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -19,7 +21,8 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar() {
+const Navbar = observer(() => {
+  const store = useStore();
   return (
     <div className="block lg:hidden">
       <Disclosure as="nav" className="bg-zinc-200 dark:bg-zinc-800/90">
@@ -71,7 +74,7 @@ export default function Navbar() {
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <DarkModeBtn />
-                  <MenuLinks />
+                  <MenuLinks avatarUrl={store.avatarUrl} />
                 </div>
               </div>
             </div>
@@ -101,4 +104,6 @@ export default function Navbar() {
       </Disclosure>
     </div>
   );
-}
+});
+
+export default Navbar;

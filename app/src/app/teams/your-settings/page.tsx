@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import { getUserApiMethod } from "@/lib/api/public";
 import YourSettingsPage from "./your-settings";
 
 type user = { user: { email: string; displayName: string; avatarUrl: string } };
@@ -19,7 +18,6 @@ export default async function YourSettings() {
   if (!session) {
     redirect("/login");
   }
-  const email = session?.user?.email as string;
   let accessToken;
   cookies()
     .getAll()
@@ -28,6 +26,5 @@ export default async function YourSettings() {
         accessToken = cookie.value;
       }
     });
-  const user = (await getUserApiMethod(email, accessToken)) as user;
-  return <YourSettingsPage user={user.user} cookie={accessToken} />;
+  return <YourSettingsPage cookie={accessToken} />;
 }
