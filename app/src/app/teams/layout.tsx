@@ -15,7 +15,7 @@ export default async function TeamsLayout({
 }) {
   const session = await getServerSession(authOptions);
   const email = session?.user?.email as string;
-  let accessToken;
+  let accessToken: undefined | string;
   cookies()
     .getAll()
     .forEach((cookie) => {
@@ -28,6 +28,7 @@ export default async function TeamsLayout({
     email: user.user.email,
     displayName: user.user.displayName,
     avatarUrl: user.user.avatarUrl,
+    accessToken: accessToken as string,
   };
   return (
     <section>

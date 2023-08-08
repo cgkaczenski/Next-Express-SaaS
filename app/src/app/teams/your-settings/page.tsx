@@ -18,13 +18,5 @@ export default async function YourSettings() {
   if (!session) {
     redirect("/login");
   }
-  let accessToken;
-  cookies()
-    .getAll()
-    .forEach((cookie) => {
-      if (cookie.name.includes("next-auth.session-token")) {
-        accessToken = cookie.value;
-      }
-    });
-  return <YourSettingsPage cookie={accessToken} />;
+  return <YourSettingsPage />;
 }

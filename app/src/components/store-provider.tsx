@@ -10,6 +10,7 @@ type initialData = {
   email: string;
   displayName: string;
   avatarUrl: string;
+  accessToken: string;
 } | null;
 
 export function useStore(): Store {

@@ -8,6 +8,7 @@ export class Store {
   email = "";
   displayName = "";
   avatarUrl = "";
+  accessToken = "";
 
   constructor() {
     makeObservable(this, {
@@ -18,22 +19,26 @@ export class Store {
     });
   }
 
-  hydrate(data: { email: string; displayName: string; avatarUrl: string }) {
+  hydrate(data: {
+    email: string;
+    displayName: string;
+    avatarUrl: string;
+    accessToken: string;
+  }) {
     if (!data) return;
 
     this.email = data.email !== null ? data.email : "";
     this.displayName = data.displayName !== null ? data.displayName : "";
     this.avatarUrl = data.avatarUrl !== null ? data.avatarUrl : "";
+    this.accessToken = data.accessToken !== null ? data.accessToken : "";
   }
 
   async updateProfile({
     name,
     avatarUrl,
-    cookie,
   }: {
     name: string;
     avatarUrl: string;
-    cookie: string;
   }) {
     const email = this.email;
     const { updatedUser } = await updateProfileApiMethod(
@@ -42,7 +47,7 @@ export class Store {
         name,
         avatarUrl,
       },
-      cookie
+      this.accessToken
     );
 
     runInAction(() => {

@@ -13,9 +13,8 @@ import { resizeImage } from "@/lib/resizeImage";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/components/store-provider";
 
-const YourSettingsPage = observer((props: { cookie: any }) => {
-  const store = useStore() as any;
-  const { cookie } = props;
+const YourSettingsPage = observer(() => {
+  const store = useStore();
   const [originalName, setOriginalName] = useState(store.displayName);
   const [name, setName] = useState(store.displayName);
   const [originalAvatarUrl, setOriginalAvatarUrl] = useState(store.avatarUrl);
@@ -43,9 +42,9 @@ const YourSettingsPage = observer((props: { cookie: any }) => {
           NProgress.start();
           setDisabled(true);
           try {
-            store.updateProfile({ name, avatarUrl, cookie });
+            store.updateProfile({ name, avatarUrl });
             toast.success("You updated your profile");
-            setOriginalName(store.name);
+            setOriginalName(store.displayName);
             setOriginalAvatarUrl(store.avatarUrl);
           } catch (error) {
             const errorStr = JSON.stringify(error);
@@ -79,9 +78,10 @@ const YourSettingsPage = observer((props: { cookie: any }) => {
     if (file == null) {
       return;
     }
-    const fileName = file.name;
-    const slug = store.email;
+
     const bucket = "avatars";
+    const slug = store.email;
+    const fileName = file.name;
 
     NProgress.start();
     setDisabled(true);
@@ -92,7 +92,7 @@ const YourSettingsPage = observer((props: { cookie: any }) => {
           slug,
           fileName,
         },
-        cookie
+        store.accessToken
       );
 
       const resizedFile = await resizeImage(file, 128, 128);
@@ -104,7 +104,6 @@ const YourSettingsPage = observer((props: { cookie: any }) => {
           "Cache-Control": "max-age=2592000",
         }
       );
-      console.log("response.url", response.url);
       setAvatarUrl(response.url);
 
       toast.success(
