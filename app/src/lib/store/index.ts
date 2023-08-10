@@ -1,21 +1,19 @@
-import { action, observable, runInAction, makeObservable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
-import { updateProfileApiMethod } from "@/lib/api/public";
+import { User } from "@/lib/store/User";
 
 enableStaticRendering(typeof window === "undefined");
 
 export class Store {
-  email = "";
-  displayName = "";
-  avatarUrl = "";
   accessToken = "";
+  public currentUser?: User | null = null;
 
   constructor() {
+    this.currentUser = new User();
+
     makeObservable(this, {
-      displayName: observable,
-      avatarUrl: observable,
+      currentUser: observable,
       hydrate: action,
-      updateProfile: action,
     });
   }
 
@@ -27,32 +25,11 @@ export class Store {
   }) {
     if (!data) return;
 
-    this.email = data.email !== null ? data.email : "";
-    this.displayName = data.displayName !== null ? data.displayName : "";
-    this.avatarUrl = data.avatarUrl !== null ? data.avatarUrl : "";
-    this.accessToken = data.accessToken !== null ? data.accessToken : "";
-  }
-
-  async updateProfile({
-    name,
-    avatarUrl,
-  }: {
-    name: string;
-    avatarUrl: string;
-  }) {
-    const email = this.email;
-    const { updatedUser } = await updateProfileApiMethod(
-      {
-        email,
-        name,
-        avatarUrl,
-      },
-      this.accessToken
-    );
-
-    runInAction(() => {
-      this.displayName = updatedUser.displayName;
-      this.avatarUrl = updatedUser.avatarUrl;
+    this.currentUser?.hydrate({
+      email: data.email !== null ? data.email : "",
+      displayName: data.displayName !== null ? data.displayName : "",
+      avatarUrl: data.avatarUrl !== null ? data.avatarUrl : "",
     });
+    this.accessToken = data.accessToken !== null ? data.accessToken : "";
   }
 }

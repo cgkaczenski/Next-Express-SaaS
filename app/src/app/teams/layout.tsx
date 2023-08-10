@@ -14,12 +14,7 @@ export default async function TeamsLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  let initialData = {
-    email: "",
-    displayName: "",
-    avatarUrl: "",
-    accessToken: "",
-  };
+  let initialData = null;
   if (session) {
     const email = session?.user?.email as string;
     let accessToken: undefined | string;

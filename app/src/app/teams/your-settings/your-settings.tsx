@@ -15,10 +15,17 @@ import { useStore } from "@/components/store-provider";
 
 const YourSettingsPage = observer(() => {
   const store = useStore();
-  const [originalName, setOriginalName] = useState(store.displayName);
-  const [name, setName] = useState(store.displayName);
-  const [originalAvatarUrl, setOriginalAvatarUrl] = useState(store.avatarUrl);
-  const [avatarUrl, setAvatarUrl] = useState(store.avatarUrl);
+  if (!store.currentUser) {
+    return null;
+  }
+  const [originalName, setOriginalName] = useState(
+    store.currentUser.displayName
+  );
+  const [name, setName] = useState(store.currentUser.displayName);
+  const [originalAvatarUrl, setOriginalAvatarUrl] = useState(
+    store.currentUser.avatarUrl
+  );
+  const [avatarUrl, setAvatarUrl] = useState(store.currentUser.avatarUrl);
   const [disabled, setDisabled] = useState(false);
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -35,17 +42,18 @@ const YourSettingsPage = observer(() => {
       title: "Update Profile",
       message: "Please confirm to update your profile",
       onAnswer: async (answer) => {
-        if (!answer) {
+        if (!answer || !store.currentUser) {
           return;
         }
         if (answer === true) {
           NProgress.start();
           setDisabled(true);
           try {
-            store.updateProfile({ name, avatarUrl });
+            const accessToken = store.accessToken;
+            store.currentUser.updateProfile({ name, avatarUrl, accessToken });
             toast.success("You updated your profile");
-            setOriginalName(store.displayName);
-            setOriginalAvatarUrl(store.avatarUrl);
+            setOriginalName(store.currentUser.displayName);
+            setOriginalAvatarUrl(store.currentUser.avatarUrl);
           } catch (error) {
             const errorStr = JSON.stringify(error);
             toast.error(errorStr);
@@ -75,12 +83,12 @@ const YourSettingsPage = observer(() => {
     ) as HTMLFormElement;
     const file = fileElement.files[0];
 
-    if (file == null) {
+    if (file == null || !store || !store.currentUser) {
       return;
     }
 
     const bucket = "avatars";
-    const slug = store.email;
+    const slug = store.currentUser.email;
     const fileName = file.name;
 
     NProgress.start();
@@ -161,7 +169,7 @@ const YourSettingsPage = observer(() => {
                   Email
                 </label>
                 <div className="mt-2 sm:col-span-2 sm:mt-0">
-                  <p className=" dark:text-white"> {store.email}</p>
+                  <p className=" dark:text-white"> {store.currentUser.email}</p>
                 </div>
               </div>
 
