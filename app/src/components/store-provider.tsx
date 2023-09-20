@@ -2,14 +2,15 @@
 
 import { createContext, useContext } from "react";
 import { Store } from "@/lib/store";
+import { User } from "@/lib/store/User";
+
+type user = InstanceType<typeof User>;
 
 export const StoreContext = createContext<Store | undefined>(undefined);
 let store: Store;
 
 type initialData = {
-  email: string;
-  displayName: string;
-  avatarUrl: string;
+  user: user;
   accessToken: string;
 } | null;
 
@@ -23,7 +24,6 @@ export function useStore(): Store {
 
 function initializeStore(initialData: initialData): Store {
   const _store = store ?? new Store();
-
   if (initialData) {
     _store.hydrate(initialData);
   }

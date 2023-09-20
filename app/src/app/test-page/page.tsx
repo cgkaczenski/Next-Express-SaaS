@@ -10,7 +10,6 @@ function testConfirm() {
     title: "Test Confirm",
     message: "This is a test confirm",
     onAnswer: async (answer) => {
-      console.log(answer);
       if (!answer) {
         return;
       }

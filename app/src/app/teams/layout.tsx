@@ -6,8 +6,6 @@ import { cookies } from "next/headers";
 import { getUserApiMethod } from "@/lib/api/public";
 import { StoreProvider } from "@/components/store-provider";
 
-type user = { user: { email: string; displayName: string; avatarUrl: string } };
-
 export default async function TeamsLayout({
   children,
 }: {
@@ -25,11 +23,10 @@ export default async function TeamsLayout({
           accessToken = cookie.value;
         }
       });
-    const user = (await getUserApiMethod(email, accessToken)) as user;
+    const user = await getUserApiMethod(email, accessToken);
+
     initialData = {
-      email: user.user.email,
-      displayName: user.user.displayName,
-      avatarUrl: user.user.avatarUrl,
+      user,
       accessToken: accessToken as string,
     };
   }

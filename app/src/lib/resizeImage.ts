@@ -26,8 +26,6 @@ function resizeImage(file: File, MAX_WIDTH: number, MAX_HEIGHT: number) {
       canvas.width = width;
       canvas.height = height;
 
-      console.log(width, height);
-
       const ctx = canvas.getContext("2d");
       ctx!.drawImage(image, 0, 0, width, height);
 
@@ -42,8 +40,6 @@ function resizeImage(file: File, MAX_WIDTH: number, MAX_HEIGHT: number) {
   return new Promise<Blob | File>((resolve) => {
     const reader = new FileReader();
 
-    console.log(`before ${image.src}`);
-
     reader.readAsDataURL(file);
 
     reader.onload = (e) => {
@@ -51,8 +47,6 @@ function resizeImage(file: File, MAX_WIDTH: number, MAX_HEIGHT: number) {
         image.src = e.target.result.toString();
 
         image.onload = resize(resolve);
-
-        console.log(`after ${image.src}`);
       }
     };
   });

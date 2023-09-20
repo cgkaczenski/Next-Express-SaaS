@@ -1,7 +1,13 @@
 import { action, observable, runInAction, makeObservable } from "mobx";
 import { updateProfileApiMethod } from "@/lib/api/public";
 
-export class User {
+interface user {
+  email: string;
+  displayName: string;
+  avatarUrl: string;
+}
+
+export class User implements user {
   email = "";
   displayName = "";
   avatarUrl = "";
@@ -15,12 +21,12 @@ export class User {
     });
   }
 
-  hydrate(data: { email: string; displayName: string; avatarUrl: string }) {
+  hydrate(data: { user: user }) {
     if (!data) return;
-
-    this.email = data.email !== null ? data.email : "";
-    this.displayName = data.displayName !== null ? data.displayName : "";
-    this.avatarUrl = data.avatarUrl !== null ? data.avatarUrl : "";
+    this.email = data.user.email !== null ? data.user.email : "";
+    this.displayName =
+      data.user.displayName !== null ? data.user.displayName : "";
+    this.avatarUrl = data.user.avatarUrl !== null ? data.user.avatarUrl : "";
   }
 
   async updateProfile({

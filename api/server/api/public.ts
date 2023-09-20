@@ -13,7 +13,7 @@ router.post("/get-user-by-email", async (req: any, res, next) => {
     if (user.id !== req.session.userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    res.json({ user });
+    res.json(user);
   } catch (err) {
     next(err);
   }
