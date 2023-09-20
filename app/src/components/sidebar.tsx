@@ -10,18 +10,8 @@ import MenuLinks from "@/components/menu-links";
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/components/store-provider";
-
-const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  {
-    name: "Discussions",
-    href: "#",
-    icon: DocumentDuplicateIcon,
-    current: false,
-    count: "5",
-  },
-];
+import { usePathname } from "next/navigation";
+import { determineCurrentTab, handleNavClick } from "@/lib/navigationUtils";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -29,6 +19,32 @@ function classNames(...classes: string[]) {
 
 const Sidebar = observer(() => {
   const store = useStore();
+  const currentPath = usePathname();
+
+  let currentTab = determineCurrentTab(currentPath);
+
+  let navigation = [
+    {
+      name: "Dashboard",
+      href: "/teams/your-settings",
+      icon: HomeIcon,
+      current: currentTab === "dashboard",
+    },
+    {
+      name: "Team",
+      href: "/teams/team-settings",
+      icon: UsersIcon,
+      current: currentTab === "team",
+    },
+    {
+      name: "Discussions",
+      href: "#",
+      icon: DocumentDuplicateIcon,
+      current: currentTab === "discussions",
+      count: "5",
+    },
+  ];
+
   return (
     <div>
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col ">
@@ -62,7 +78,8 @@ const Sidebar = observer(() => {
                 <ul role="list" className="-mx-2 space-y-1">
                   {navigation.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
+                        onClick={() => handleNavClick(store, item.name)}
                         href={item.href}
                         className={classNames(
                           item.current
@@ -84,7 +101,7 @@ const Sidebar = observer(() => {
                             {item.count}
                           </span>
                         ) : null}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

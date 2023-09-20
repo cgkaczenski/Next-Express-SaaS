@@ -7,15 +7,8 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/components/store-provider";
-
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#" },
-  {
-    name: "Discussions",
-    href: "#",
-  },
-];
+import { usePathname } from "next/navigation";
+import { determineCurrentTab, handleNavClick } from "@/lib/navigationUtils";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -23,6 +16,28 @@ function classNames(...classes: string[]) {
 
 const Navbar = observer(() => {
   const store = useStore();
+  const currentPath = usePathname();
+
+  let currentTab = determineCurrentTab(currentPath);
+
+  let navigation = [
+    {
+      name: "Dashboard",
+      href: "/teams/your-settings",
+      current: currentTab === "dashboard",
+    },
+    {
+      name: "Team",
+      href: "/teams/team-settings",
+      current: currentTab === "team",
+    },
+    {
+      name: "Discussions",
+      href: "#",
+      current: currentTab === "discussions",
+    },
+  ];
+
   return (
     <div className="block lg:hidden">
       <Disclosure as="nav" className="bg-zinc-200 dark:bg-zinc-800/90">
@@ -55,8 +70,9 @@ const Navbar = observer(() => {
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
+                          onClick={() => handleNavClick(store, item.name)}
                           href={item.href}
                           className={classNames(
                             item.current
@@ -67,7 +83,7 @@ const Navbar = observer(() => {
                           aria-current={item.current ? "page" : undefined}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -90,7 +106,8 @@ const Navbar = observer(() => {
                 {navigation.map((item) => (
                   <Disclosure.Button
                     key={item.name}
-                    as="a"
+                    as={Link}
+                    onClick={() => handleNavClick(store, item.name)}
                     href={item.href}
                     className={classNames(
                       item.current
