@@ -13,7 +13,7 @@ import {
 import { useStore } from "@/components/store-provider";
 import { useRouter } from "next/navigation";
 
-const baseUrl = process.env.BASE_URL;
+//const baseUrl = process.env.BASE_URL;
 
 function CreateTeamPage() {
   const store = useStore();
@@ -39,8 +39,7 @@ function CreateTeamPage() {
           NProgress.start();
           setDisabled(true);
           try {
-            const accessToken = store.accessToken;
-            //store.currentUser.updateProfile({ name, avatarUrl, accessToken });
+            store.addTeam({ name, logoUrl });
             toast.success("You updated your profile");
           } catch (error) {
             const errorStr = JSON.stringify(error);
@@ -48,7 +47,8 @@ function CreateTeamPage() {
           } finally {
             NProgress.done();
             setDisabled(false);
-            router.push(baseUrl + "/teams/your-settings");
+            //Redirect to team-settings page
+            //router.push(baseUrl + "/teams/your-settings");
           }
         }
       },

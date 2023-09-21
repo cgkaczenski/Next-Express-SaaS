@@ -1,6 +1,7 @@
 import * as postgres from "postgres";
 import { User, UserRepository } from "./services/User";
 import { Session, SessionRepository } from "./services/Session";
+import { Team, TeamRepository } from "./services/Team";
 import { config } from "dotenv";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -8,7 +9,9 @@ if (!isProd) {
   config();
 }
 
-class postgresDatabase implements UserRepository, SessionRepository {
+class postgresDatabase
+  implements UserRepository, SessionRepository, TeamRepository
+{
   sql: postgres.Sql;
   transformer: DataTransformer;
 
@@ -52,6 +55,23 @@ class postgresDatabase implements UserRepository, SessionRepository {
     `;
     return sessions[0];
   }
+
+  public async addTeam({
+    userId,
+    name,
+    logoUrl,
+    defaultTeam,
+  }: {
+    userId: string;
+    name: string;
+    logoUrl: string;
+    defaultTeam: boolean;
+  }): Promise<Team> {
+    const teams = await this.sql<Team[]>`
+    INSERT INTO team (name, logo_url, team_leader_id, member_ids, default_team) VALUES (${name}, ${logoUrl}, ${userId}, ARRAY[${userId}::UUID], ${defaultTeam} ) RETURNING id, name, logo_url, team_leader_id, member_ids
+    `;
+    return this.transformer.convertRowToTeam(teams[0]);
+  }
 }
 
 class DataTransformer {
@@ -61,6 +81,16 @@ class DataTransformer {
       displayName: row.display_name,
       email: row.email,
       avatarUrl: row.avatar_url,
+    };
+  }
+
+  convertRowToTeam(row: postgres.Row): Team {
+    return {
+      id: row.id,
+      name: row.name,
+      logoUrl: row.logo_url,
+      teamLeaderId: row.team_leader_id,
+      memberIds: row.member_ids,
     };
   }
 }

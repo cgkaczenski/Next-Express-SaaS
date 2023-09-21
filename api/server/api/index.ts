@@ -2,6 +2,7 @@ import * as express from "express";
 import SessionService from "../services/Session";
 import publicExpressRoutes from "./public";
 import teamMemberExpressRoutes from "./team-member";
+import teamLeadExpressRoutes from "./team-leader";
 
 function handleError(err, _, res, __) {
   console.error(err.stack);
@@ -38,5 +39,6 @@ export default function api(server: express.Express) {
   server.use(checkSession);
   server.use("/api/v1/public", publicExpressRoutes);
   server.use("/api/v1/team-member", teamMemberExpressRoutes);
+  server.use("/api/v1/team-leader", teamLeadExpressRoutes);
   server.use(handleError);
 }
