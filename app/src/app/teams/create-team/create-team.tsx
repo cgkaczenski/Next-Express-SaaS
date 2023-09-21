@@ -108,7 +108,6 @@ function CreateTeamPage() {
       setDisabled(false);
     }
   }
-
   return (
     <div className="p-3 dark:bg-zinc-700 min-h-screen flex justify-center">
       <form

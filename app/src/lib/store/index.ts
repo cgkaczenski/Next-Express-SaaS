@@ -1,25 +1,24 @@
-import { action, observable, makeObservable } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
 import { User } from "@/lib/store/User";
-import { UI } from "@/lib/store/UI";
 
 type user = InstanceType<typeof User>;
-
 enableStaticRendering(typeof window === "undefined");
+const defaultTab = "dashboard";
 
 export class Store {
   accessToken = "";
   public currentUser?: User | null = null;
-  public ui?: UI | null = null;
+  currentTab = defaultTab;
 
   constructor() {
     this.currentUser = new User();
-    this.ui = new UI();
 
     makeObservable(this, {
       currentUser: observable,
-      ui: observable,
+      currentTab: observable,
       hydrate: action,
+      setCurrentTab: action,
     });
   }
 
@@ -29,5 +28,11 @@ export class Store {
       user: data.user,
     });
     this.accessToken = data.accessToken !== null ? data.accessToken : "";
+  }
+
+  async setCurrentTab({ currentTab }: { currentTab: string }) {
+    runInAction(() => {
+      this.currentTab = currentTab;
+    });
   }
 }
