@@ -10,7 +10,10 @@ if (!isProd) {
 }
 
 interface GenericUtils {
-  countRecords(tableName: string, criteria?: object): Promise<number>;
+  countRecords(
+    tableName: string,
+    criteria?: { field: string; value: any }[]
+  ): Promise<number>;
 }
 
 class postgresDatabase
@@ -77,25 +80,27 @@ class postgresDatabase
     return this.transformer.convertRowToTeam(teams[0]);
   }
 
-  // This function only works for one criteria
   public async countRecords(
     tableName: string,
-    criteria?: object
+    criterias?: { field: string; value: any }[]
   ): Promise<number> {
-    const field = Object.keys(criteria)[0];
-
-    if (!criteria) {
-      const result = await this.sql<{ count: number }[]>`
-      SELECT COUNT(*) FROM ${this.sql(tableName)}
-    `;
+    if (!criterias || criterias.length === 0) {
+      const result = await this.sql`SELECT COUNT(*) FROM ${this.sql(
+        tableName
+      )}`;
       return result[0].count;
     }
+    const whereClauses = criterias.map((criteria) => {
+      return this.sql`${this.sql([criteria.field])} = ${criteria.value}`;
+    });
+    const combinedWhereClause = whereClauses.reduce((acc, current, index) => {
+      return index === 0 ? current : this.sql`${acc} AND ${current}`;
+    }, this.sql``);
 
-    const result = await this.sql<{ count: number }[]>`
-    SELECT COUNT(*) FROM ${this.sql(tableName)} WHERE ${this.sql(field)} = ${
-      criteria[field]
-    }
-  `;
+    const result = await this.sql`SELECT COUNT(*) FROM ${this.sql(
+      tableName
+    )} WHERE ${combinedWhereClause}`;
+
     return result[0].count;
   }
 }
