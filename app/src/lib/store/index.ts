@@ -11,7 +11,7 @@ const defaultTab = "dashboard";
 export class Store {
   public accessToken = "";
   public currentUser?: User | null = null;
-  public currentTab = defaultTab;
+  public currentTab = "";
 
   constructor() {
     this.currentUser = new User();

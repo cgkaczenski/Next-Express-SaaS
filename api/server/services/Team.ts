@@ -38,7 +38,11 @@ class TeamService {
     name: string;
     logoUrl: string;
   }): Promise<Team> {
-    const defaultTeam = true;
+    let defaultTeam = false;
+    const teamCount = await db.countRecords("team", { team_leader_id: userId });
+    if (teamCount == 0) {
+      defaultTeam = true;
+    }
     return this.database.addTeam({ userId, name, logoUrl, defaultTeam });
   }
 }

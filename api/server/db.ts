@@ -9,8 +9,12 @@ if (!isProd) {
   config();
 }
 
+interface GenericUtils {
+  countRecords(tableName: string, criteria?: object): Promise<number>;
+}
+
 class postgresDatabase
-  implements UserRepository, SessionRepository, TeamRepository
+  implements UserRepository, SessionRepository, TeamRepository, GenericUtils
 {
   sql: postgres.Sql;
   transformer: DataTransformer;
@@ -25,7 +29,7 @@ class postgresDatabase
 
   public async getUserByEmail({ email }: { email: string }): Promise<User> {
     const users = await this.sql<User[]>`
-    SELECT id, email, name as display_name, image as avatar_url FROM next_auth.users WHERE email = ${email}
+    SELECT id, email, name, image FROM next_auth.users WHERE email = ${email}
     `;
     return this.transformer.convertRowToUser(users[0]);
   }
@@ -40,7 +44,7 @@ class postgresDatabase
     avatarUrl: string;
   }): Promise<User> {
     const users = await this.sql<User[]>`
-    UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId} RETURNING id, email, name as display_name, image as avatar_url;
+    UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId} RETURNING id, email, name, image;
     `;
     return this.transformer.convertRowToUser(users[0]);
   }
@@ -72,15 +76,37 @@ class postgresDatabase
     `;
     return this.transformer.convertRowToTeam(teams[0]);
   }
+
+  // This function only works for one criteria
+  public async countRecords(
+    tableName: string,
+    criteria?: object
+  ): Promise<number> {
+    const field = Object.keys(criteria)[0];
+
+    if (!criteria) {
+      const result = await this.sql<{ count: number }[]>`
+      SELECT COUNT(*) FROM ${this.sql(tableName)}
+    `;
+      return result[0].count;
+    }
+
+    const result = await this.sql<{ count: number }[]>`
+    SELECT COUNT(*) FROM ${this.sql(tableName)} WHERE ${this.sql(field)} = ${
+      criteria[field]
+    }
+  `;
+    return result[0].count;
+  }
 }
 
 class DataTransformer {
   convertRowToUser(row: postgres.Row): User {
     return {
       id: row.id,
-      displayName: row.display_name,
+      displayName: row.name,
       email: row.email,
-      avatarUrl: row.avatar_url,
+      avatarUrl: row.image,
     };
   }
 
