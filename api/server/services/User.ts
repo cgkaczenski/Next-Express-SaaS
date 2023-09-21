@@ -10,14 +10,14 @@ export interface User {
 export interface UserRepository {
   getUserByEmail({ email }: { email: string }): Promise<User>;
 
-  updateProfile({
+  findUserByIdAndUpdate({
     userId,
-    name,
-    avatarUrl,
+    updates,
+    returnFields,
   }: {
     userId: string;
-    name: string;
-    avatarUrl: string;
+    updates: object;
+    returnFields: string[];
   }): Promise<User>;
 }
 
@@ -32,16 +32,20 @@ class UserService {
     return this.database.getUserByEmail({ email });
   }
 
-  public async updateProfile({
+  public async findUserByIdAndUpdate({
     userId,
-    name,
-    avatarUrl,
+    updates,
+    returnFields,
   }: {
     userId: string;
-    name: string;
-    avatarUrl: string;
+    updates: object;
+    returnFields: string[];
   }): Promise<User> {
-    return this.database.updateProfile({ userId, name, avatarUrl });
+    return this.database.findUserByIdAndUpdate({
+      userId,
+      updates,
+      returnFields,
+    });
   }
 }
 

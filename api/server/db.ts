@@ -37,17 +37,21 @@ class postgresDatabase
     return this.transformer.convertRowToUser(users[0]);
   }
 
-  public async updateProfile({
+  public async findUserByIdAndUpdate({
     userId,
-    name,
-    avatarUrl,
+    updates,
+    returnFields,
   }: {
     userId: string;
-    name: string;
-    avatarUrl: string;
+    updates: { [key: string]: any };
+    returnFields: string[];
   }): Promise<User> {
+    const columns = Object.keys(updates);
+
     const users = await this.sql<User[]>`
-    UPDATE next_auth.users SET name = ${name}, image = ${avatarUrl} WHERE id = ${userId} RETURNING id, email, name, image;
+      UPDATE next_auth.users 
+      SET ${this.sql(updates, ...columns)}
+      WHERE id = ${userId} RETURNING ${this.sql(returnFields)};
     `;
     return this.transformer.convertRowToUser(users[0]);
   }

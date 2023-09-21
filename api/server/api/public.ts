@@ -28,10 +28,10 @@ router.post("/user/update-profile", async (req: any, res, next) => {
     if (user.id !== req.session.userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    const updatedUser = await UserService.updateProfile({
+    const updatedUser = await UserService.findUserByIdAndUpdate({
       userId: user.id,
-      name,
-      avatarUrl,
+      updates: { name: name, image: avatarUrl },
+      returnFields: ["id", "email", "name", "image"],
     });
 
     res.json({ updatedUser });
