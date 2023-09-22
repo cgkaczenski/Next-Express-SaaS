@@ -8,7 +8,7 @@ import Link from "next/link";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/components/store-provider";
 import { usePathname } from "next/navigation";
-import { determineCurrentTab, handleNavClick } from "@/lib/navigationUtils";
+import { determineCurrentTab, handleNavClick } from "@/lib/clientUtils";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

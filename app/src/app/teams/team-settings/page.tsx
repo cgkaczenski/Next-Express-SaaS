@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { getDefaultTeamApiMethod } from "@/lib/api/team-member";
+import { getServerSideSessionCookie } from "@/lib/serverUtils";
+import TeamSettingsPage from "./team-settings";
 
 export const metadata: Metadata = {
   title: "Create Team",
@@ -13,5 +16,12 @@ export default async function YourSettings() {
   if (!session) {
     redirect("/login");
   }
-  redirect("/teams/create-team");
+  let accessToken = getServerSideSessionCookie();
+  console.log(accessToken);
+  const team = await getDefaultTeamApiMethod(accessToken);
+  console.log(team);
+  if (!team) {
+    redirect("/teams/create-team");
+  }
+  return <TeamSettingsPage />;
 }

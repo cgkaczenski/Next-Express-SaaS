@@ -34,3 +34,11 @@ export const uploadFileUsingSignedPutRequestApiMethod = (
     body: file,
     headers,
   });
+
+export async function getDefaultTeamApiMethod(cookie: any) {
+  return sendRequestAndGetResponse(
+    `${BASE_PATH}/teams/getDefaultTeam`,
+    {},
+    cookie
+  );
+}

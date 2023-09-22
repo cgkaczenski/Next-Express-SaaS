@@ -1,6 +1,7 @@
 import * as express from "express";
 import { config } from "dotenv";
-import TeamService from "../services/Team";
+import teamService from "../services/Team";
+import userService from "../services/User";
 
 const router = express.Router();
 
@@ -12,8 +13,15 @@ if (!isProd) {
 router.post("/teams/add", async (req: any, res, next) => {
   console.log("Express route: /teams/add");
   try {
+    const user = await userService.getUser({
+      field: "id",
+      value: req.session.userId,
+    });
+    if (user.id !== req.session.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { name, logoUrl } = req.body;
-    const team = await TeamService.addTeam({
+    const team = await teamService.addTeam({
       userId: req.session.userId,
       name,
       logoUrl,

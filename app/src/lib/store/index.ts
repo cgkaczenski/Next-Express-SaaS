@@ -11,10 +11,12 @@ const defaultTab = "dashboard";
 export class Store {
   public accessToken = "";
   public currentUser?: User | null = null;
+  public currentTeam?: Team | null = null;
   public currentTab = "";
 
   constructor() {
     this.currentUser = new User();
+    this.currentTeam = new Team();
     this.currentTab = defaultTab;
 
     makeObservable(this, {
@@ -25,12 +27,17 @@ export class Store {
     });
   }
 
-  public hydrate(data: { user: user; accessToken: string }) {
+  public hydrate(data: { user: user; team: Team; accessToken: string }) {
     if (!data || !data.user) return;
     this.currentUser?.hydrate({
       user: data.user,
     });
     this.accessToken = data.accessToken !== null ? data.accessToken : "";
+
+    if (!data.team) return;
+    this.currentTeam?.hydrate({
+      team: data.team,
+    });
   }
 
   public async setCurrentTab({ currentTab }: { currentTab: string }) {

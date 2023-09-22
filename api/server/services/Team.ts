@@ -21,6 +21,10 @@ export interface TeamRepository {
     logoUrl: string;
     defaultTeam: boolean;
   }): Promise<Team>;
+
+  getTeam(criteria: { field: string; value: any }): Promise<Team>;
+
+  getAllTeamsForUser({ userId }: { userId: string }): Promise<Team[]>;
 }
 
 class TeamService {
@@ -65,6 +69,18 @@ class TeamService {
     }
 
     return this.database.addTeam({ userId, name, logoUrl, defaultTeam });
+  }
+
+  public async getTeam(criteria: { field: string; value: any }): Promise<Team> {
+    return this.database.getTeam(criteria);
+  }
+
+  public async getAllTeamsForUser({
+    userId,
+  }: {
+    userId: string;
+  }): Promise<Team[]> {
+    return await this.database.getAllTeamsForUser({ userId });
   }
 }
 

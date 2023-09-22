@@ -5,10 +5,11 @@ export interface User {
   email: string;
   displayName: string;
   avatarUrl: string;
+  defaultTeamId: string;
 }
 
 export interface UserRepository {
-  getUserByEmail({ email }: { email: string }): Promise<User>;
+  getUser(criteria: { field: string; value: any }): Promise<User>;
 
   findUserByIdAndUpdate({
     userId,
@@ -28,8 +29,8 @@ class UserService {
     this.database = database;
   }
 
-  public async getUserByEmail({ email }: { email: string }): Promise<User> {
-    return this.database.getUserByEmail({ email });
+  public async getUser(criteria: { field: string; value: any }): Promise<User> {
+    return this.database.getUser(criteria);
   }
 
   public async findUserByIdAndUpdate({

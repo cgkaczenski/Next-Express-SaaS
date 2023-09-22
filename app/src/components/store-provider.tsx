@@ -3,14 +3,17 @@
 import { createContext, useContext } from "react";
 import { Store } from "@/lib/store";
 import { User } from "@/lib/store/User";
+import { Team } from "@/lib/store/Team";
 
 type user = InstanceType<typeof User>;
+type team = InstanceType<typeof Team>;
 
 export const StoreContext = createContext<Store | undefined>(undefined);
 let store: Store;
 
 type initialData = {
   user: user;
+  team: team;
   accessToken: string;
 } | null;
 

@@ -1,5 +1,5 @@
 import * as express from "express";
-import UserService from "../services/User";
+import userService from "../services/User";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.post("/get-user-by-email", async (req: any, res, next) => {
   try {
     const { email } = req.body;
 
-    const user = await UserService.getUserByEmail({ email });
+    const user = await userService.getUser({ field: "email", value: email });
     if (user.id !== req.session.userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -24,11 +24,11 @@ router.post("/user/update-profile", async (req: any, res, next) => {
 
   try {
     const { email, name, avatarUrl } = req.body;
-    const user = await UserService.getUserByEmail({ email });
+    const user = await userService.getUser({ field: "email", value: email });
     if (user.id !== req.session.userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    const updatedUser = await UserService.findUserByIdAndUpdate({
+    const updatedUser = await userService.findUserByIdAndUpdate({
       userId: user.id,
       updates: { name: name, image: avatarUrl },
       returnFields: ["id", "email", "name", "image"],

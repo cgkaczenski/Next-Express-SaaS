@@ -1,6 +1,8 @@
 import * as express from "express";
 import { config } from "dotenv";
 import { StorageClient } from "@supabase/storage-js";
+import userService from "../services/User";
+import teamService from "../services/Team";
 
 const router = express.Router();
 
@@ -46,6 +48,26 @@ router.post("/get-signed-request-for-upload", async (req, res, next) => {
     }
 
     res.json(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/teams/getDefaultTeam", async (req: any, res, next) => {
+  console.log("Express route: /teams/getDefaultTeam");
+  try {
+    const user = await userService.getUser({
+      field: "id",
+      value: req.session.userId,
+    });
+    if (user.id !== req.session.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const team = await teamService.getTeam({
+      field: "id",
+      value: user.defaultTeamId,
+    });
+    res.json(team);
   } catch (err) {
     next(err);
   }

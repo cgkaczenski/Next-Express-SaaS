@@ -30,9 +30,11 @@ class postgresDatabase
     this.transformer = new DataTransformer();
   }
 
-  public async getUserByEmail({ email }: { email: string }): Promise<User> {
+  public async getUser(criteria: { field: string; value: any }): Promise<User> {
     const users = await this.sql<User[]>`
-    SELECT id, email, name, image FROM next_auth.users WHERE email = ${email}
+    SELECT id, email, name, image, default_team_id FROM next_auth.users WHERE ${this.sql(
+      criteria.field
+    )} = ${criteria.value}
     `;
     return this.transformer.convertRowToUser(users[0]);
   }
@@ -107,6 +109,26 @@ class postgresDatabase
 
     return result[0].count;
   }
+
+  public async getAllTeamsForUser({
+    userId,
+  }: {
+    userId: string;
+  }): Promise<Team[]> {
+    const teams = await this.sql<Team[]>`
+    SELECT id, name, logo_url, team_leader_id, member_ids FROM next_auth.team WHERE ${userId} = ANY(member_ids)
+    `;
+    return teams.map((team) => this.transformer.convertRowToTeam(team));
+  }
+
+  public async getTeam(criteria: { field: string; value: any }): Promise<Team> {
+    const teams = await this.sql<Team[]>`
+    SELECT id, name, logo_url, team_leader_id, member_ids FROM team WHERE ${this.sql(
+      criteria.field
+    )} = ${criteria.value}
+    `;
+    return this.transformer.convertRowToTeam(teams[0]);
+  }
 }
 
 class DataTransformer {
@@ -116,6 +138,7 @@ class DataTransformer {
       displayName: row.name,
       email: row.email,
       avatarUrl: row.image,
+      defaultTeamId: row.default_team_id,
     };
   }
 
