@@ -13,19 +13,21 @@ export default async function TeamsLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  let initialData = null;
-  if (session) {
-    const email = session?.user?.email as string;
-    let accessToken = getServerSideSessionCookie();
-    const user = await getUserApiMethod(email, accessToken);
-    const team = await getDefaultTeamApiMethod(accessToken);
-
-    initialData = {
-      user,
-      team,
-      accessToken: accessToken as string,
-    };
+  if (!session) {
+    return <div>Unauthorized</div>;
   }
+  const email = session?.user?.email as string;
+  let accessToken = getServerSideSessionCookie();
+  //Put team data in getUserApiMethod
+  const user = await getUserApiMethod(email, accessToken);
+  const team = await getDefaultTeamApiMethod(accessToken);
+
+  const initialData = {
+    user,
+    team,
+    accessToken: accessToken as string,
+  };
+
   return (
     <section>
       <StoreProvider initialData={initialData}>

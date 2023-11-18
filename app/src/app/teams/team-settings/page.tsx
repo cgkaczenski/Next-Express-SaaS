@@ -7,8 +7,8 @@ import { getServerSideSessionCookie } from "@/lib/serverUtils";
 import TeamSettingsPage from "./team-settings";
 
 export const metadata: Metadata = {
-  title: "Create Team",
-  description: "Create team page",
+  title: "Team Settings",
+  description: "Team settings page",
 };
 
 export default async function YourSettings() {
@@ -16,10 +16,9 @@ export default async function YourSettings() {
   if (!session) {
     redirect("/login");
   }
+  //Todo: get team from client state if available
   let accessToken = getServerSideSessionCookie();
-  console.log(accessToken);
   const team = await getDefaultTeamApiMethod(accessToken);
-  console.log(team);
   if (!team) {
     redirect("/teams/create-team");
   }
